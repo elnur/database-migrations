@@ -1,5 +1,6 @@
 {
     "name": "elnur/database-migrations",
+    "description": "Plain SQL migrations",
     "license": "MIT",
     "require": {
         "doctrine/dbal": "@stable"
