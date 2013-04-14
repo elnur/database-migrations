@@ -23,11 +23,12 @@
 namespace Elnur\Database;
 
 use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Driver\Statement;
 
 class MigrationManager
 {
     /**
-     * @var \Doctrine\DBAL\Driver\Connection
+     * @var Connection
      */
     private $db;
 
@@ -37,7 +38,7 @@ class MigrationManager
     private $dir;
 
     /**
-     * @param \Doctrine\DBAL\Driver\Connection $db
+     * @param Connection $db
      * @param string $dir
      */
     public function __construct(Connection $db, $dir)
@@ -97,7 +98,7 @@ class MigrationManager
      */
     private function getCurrentVersion()
     {
-        /** @var $result \Doctrine\DBAL\Driver\Statement */
+        /** @var $result Statement */
         $result  = $this->db->query('SELECT version FROM schema');
         $version = $result->fetchColumn();
 
