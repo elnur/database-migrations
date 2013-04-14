@@ -39,7 +39,7 @@ class MigrationManager
 
     /**
      * @param Connection $db
-     * @param string $dir
+     * @param string     $dir
      */
     public function __construct(Connection $db, $dir)
     {
@@ -58,7 +58,7 @@ class MigrationManager
                 continue;
             }
 
-            $path = $this->dir . DIRECTORY_SEPARATOR . $migration . '.sql';
+            $path = $this->dir.DIRECTORY_SEPARATOR.$migration.'.sql';
 
             $this->db->exec(file_get_contents($path));
             $this->db->exec("UPDATE schema SET version = '{$migration}'");
