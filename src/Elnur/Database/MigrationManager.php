@@ -85,6 +85,8 @@ class MigrationManager
             $migrations[$key] = pathinfo($value, PATHINFO_FILENAME);
         });
 
+        sort($migrations);
+
         return $migrations;
     }
 
