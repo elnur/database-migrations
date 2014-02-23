@@ -54,14 +54,20 @@ class MigrationManager
         $this->db->beginTransaction();
 
         foreach ($this->findMigrations($this->dir) as $migration) {
-            if ($migration <= $this->getCurrentVersion()) {
+            $version = (int)$migration;
+            if ($version <= $this->getCurrentVersion()) {
                 continue;
             }
 
-            $path = $this->dir.DIRECTORY_SEPARATOR.$migration.'.sql';
+            $path = $this->dir.DIRECTORY_SEPARATOR.$migration;
 
-            $this->db->exec(file_get_contents($path));
-            $this->db->exec("UPDATE schema SET version = '{$migration}'");
+            if (substr($path, -3) == 'php') {
+                $db = $this->db;
+                include_once($path);
+            } else {
+                $this->db->exec(file_get_contents($path));
+            }
+            $this->db->exec("UPDATE schema SET version = '{$version}'");
         }
 
         $this->db->commit();
@@ -74,18 +80,16 @@ class MigrationManager
     private function findMigrations($dir)
     {
         $migrations = array_filter(scandir($dir), function ($filename) {
-            if (!preg_match('|^\d+\.sql$|', $filename)) {
+            if (!preg_match('@^\d+\.(sql|php)$@', $filename)) {
                 return false;
             }
 
             return true;
         });
 
-        array_walk($migrations, function ($value, $key) use (&$migrations) {
-            $migrations[$key] = pathinfo($value, PATHINFO_FILENAME);
+        usort($migrations, function ($a, $b) {
+            return (int)$a - (int)$b;
         });
-
-        sort($migrations);
 
         return $migrations;
     }
