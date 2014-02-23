@@ -39,11 +39,11 @@ class MigrationManager
 
     /**
      * @param Connection $db
-     * @param string     $dir
+     * @param string $dir
      */
     public function __construct(Connection $db, $dir)
     {
-        $this->db  = $db;
+        $this->db = $db;
         $this->dir = $dir;
     }
 
@@ -105,7 +105,7 @@ class MigrationManager
     private function getCurrentVersion()
     {
         /** @var $result Statement */
-        $result  = $this->db->query('SELECT version FROM schema');
+        $result = $this->db->query('SELECT version FROM schema');
         $version = $result->fetchColumn();
 
         if (!$version) {
