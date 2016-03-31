@@ -52,6 +52,7 @@ class MigrationManager
         $this->initSchemaTable();
 
         $this->db->beginTransaction();
+        $this->lockSchemaTable();
 
         foreach ($this->findMigrations($this->dir) as $migration) {
             $version = (int)$migration;
@@ -97,6 +98,11 @@ class MigrationManager
     private function initSchemaTable()
     {
         $this->db->exec('CREATE TABLE IF NOT EXISTS schema(version varchar PRIMARY KEY)');
+    }
+
+    private function lockSchemaTable()
+    {
+        $this->db->exec('LOCK schema');
     }
 
     /**
