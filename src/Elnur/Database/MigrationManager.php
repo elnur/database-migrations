@@ -24,6 +24,7 @@ namespace Elnur\Database;
 
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\Statement;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 class MigrationManager
 {
@@ -97,7 +98,10 @@ class MigrationManager
 
     private function initSchemaTable()
     {
-        $this->db->exec('CREATE TABLE IF NOT EXISTS schema(version varchar PRIMARY KEY)');
+        try {
+            $this->db->exec('CREATE TABLE IF NOT EXISTS schema(version varchar PRIMARY KEY)');
+        } catch (UniqueConstraintViolationException $ignored) {
+        }
     }
 
     private function lockSchemaTable()
